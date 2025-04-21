@@ -1,0 +1,128 @@
+definitions:
+  models.Task:
+    properties:
+      description:
+        type: string
+      status:
+        enum:
+        - new
+        - in_progress
+        - done
+        example: new
+        type: string
+      title:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /tasks:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает все задачи
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Task'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Получить список всех задач
+      tags:
+      - tasks
+    post:
+      consumes:
+      - application/json
+      description: Добавляет новую задачу в базу данных
+      parameters:
+      - description: Новая задача
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/models.Task'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Task'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Создать новую задачу
+      tags:
+      - tasks
+  /tasks/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Удаляет задачу по ID
+      parameters:
+      - description: ID задачи
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Задача успешно удалена
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Удалить задачу
+      tags:
+      - tasks
+    put:
+      consumes:
+      - application/json
+      description: Обновляет задачу по ID
+      parameters:
+      - description: ID задачи
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Обновляемые поля задачи
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/models.Task'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Обновить задачу
+      tags:
+      - tasks
+swagger: "2.0"
